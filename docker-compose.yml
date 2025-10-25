@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  expo-mobile-app:
+    build: .
+    ports:
+      - "8081:8081"
+    container_name: expo-mobile-app
+    restart: unless-stopped
+    volumes:
+      - .:/app
+      - /app/node_modules
