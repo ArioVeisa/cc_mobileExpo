@@ -18,11 +18,21 @@ pipeline {
             }
         }
 
+        stage('Setup Node.js 20') {
+            steps {
+                echo '🔧 Setting up Node.js 20...'
+                sh '#!/bin/bash -xe\ncurl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash'
+                sh '#!/bin/bash -xe\nexport NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh" && nvm install 20 && nvm use 20'
+                sh '#!/bin/bash -xe\nnode --version && npm --version'
+            }
+        }
+
         stage('Install Dependencies') {
             steps {
                 echo '📥 Installing npm dependencies...'
                 sh '''
                     #!/bin/bash -xe
+                    export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh" && nvm use 20
                     npm ci --cache /tmp/.npm --no-optional
                     npm install -g @expo/cli
                 '''
@@ -34,6 +44,7 @@ pipeline {
                 echo '🔍 Running TypeScript and lint checks...'
                 sh '''
                     #!/bin/bash -xe
+                    export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && nvm use 20
                     npx tsc --noEmit || true
                     npx eslint . || true
                 '''
@@ -45,7 +56,8 @@ pipeline {
                 echo '🩺 Checking project health with Expo Doctor...'
                 sh '''
                     #!/bin/bash -xe
-                    npx expo doctor || true
+                    export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && nvm use 20
+                    npx expo-doctor || true
                 '''
             }
         }
@@ -55,6 +67,7 @@ pipeline {
                 echo '🌐 Building Expo web version...'
                 sh '''
                     #!/bin/bash -xe
+                    export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && nvm use 20
                     npx expo export --platform web || true
                 '''
             }
@@ -110,6 +123,7 @@ pipeline {
                         echo '📱 Publishing app to Expo...'
                         sh '''
                             #!/bin/bash -xe
+                            export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh" && nvm use 20
                             npx expo login --token ${EXPO_TOKEN}
                             npx expo publish --non-interactive
                         '''
