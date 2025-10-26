@@ -124,11 +124,9 @@ pipeline {
 
     post {
         always {
-            node {
-                echo '🧹 Cleaning up workspace...'
-                archiveArtifacts artifacts: 'dist/**/*', allowEmptyArchive: true
-                cleanWs()
-            }
+            echo '🧹 Cleaning up workspace...'
+            archiveArtifacts artifacts: 'dist/**/*', allowEmptyArchive: true
+            cleanWs()
         }
         success {
             echo '🎉 Mobile app pipeline completed successfully!'
