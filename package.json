@@ -6,7 +6,11 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "build:web": "expo export --platform web",
+    "type-check": "tsc --noEmit",
+    "doctor": "expo doctor",
+    "publish": "expo publish --non-interactive"
   },
   "dependencies": {
     "expo": "~54.0.20",
