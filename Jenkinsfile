@@ -1,10 +1,6 @@
 pipeline {
     agent any
     
-    tools {
-        nodejs '18' // Make sure Node.js 18 is configured in Jenkins Global Tools
-    }
-    
     environment {
         DOCKER_IMAGE = 'cc-mobile-expo'
         DOCKER_TAG = "${BUILD_NUMBER}"
@@ -18,6 +14,16 @@ pipeline {
             steps {
                 echo 'Checking out source code...'
                 checkout scm
+            }
+        }
+        
+        stage('Install Node.js') {
+            steps {
+                echo 'Installing Node.js...'
+                sh 'curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -'
+                sh 'sudo apt-get install -y nodejs'
+                sh 'node --version'
+                sh 'npm --version'
             }
         }
         
